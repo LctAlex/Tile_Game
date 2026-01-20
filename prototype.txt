@@ -1,0 +1,87 @@
+const char* map[] = {
+        "111110001",
+        "1100000001",
+        "100000",
+        "1110",
+        "000001",
+        "1"
+    };
+std::vector<Rectangle> recVec;
+int totalH = (int)(sizeof(map)/sizeof(map[0]));
+int totalW;
+for(int y = 0; y < totalH; y++)
+{
+    totalW = (int)strlen(map[y]);
+    for(int x = 0; x < totalW; x++)
+    {
+        if(map[y][x] == '1')
+        {
+            int tempStart = x;
+            while(map[y][x] == '1')
+            {
+                x++;
+            }
+            recVec.emplace_back((Rectangle){tempStart*(float)screenW/totalW, y*(float)screenH/totalH,
+                 (x-tempStart)*(float)screenW/totalW, (float)screenH/totalH});
+        }
+        // if(map[y][x] == '1')
+        // {
+        //     recVec.emplace_back((Rectangle){x*(float)screenW/totalW, y*(float)screenH/totalH,
+        //         (float)screenW/totalW, (float)screenH/totalH});
+        // }
+    }
+}  
+
+// class Solid //base class
+// {
+//     protected:
+//     Rectangle rect;
+//     public:
+//     Solid(Rectangle rec):rect(rec){}
+//     Rectangle GetRect()
+//     {
+//         return rect;
+//     }
+//     virtual void Draw(Color color = BLACK)
+//     {
+//         DrawRectangleRec(rect, color);
+//         DrawRectangleLinesEx(rect, 0.5f, RED);
+//     }
+
+//     ~Solid(){}
+// };
+
+// class Slime: public Solid
+// {
+//     public:
+//     Slime(Rectangle rec):Solid(rec){}
+//     void Draw(Color color) override
+//     {
+//         Solid::Draw(GREEN);
+//     }
+
+//     ~Slime(){}
+// };
+
+DENIS:
+1030013133
+11030110033
+1
+0
+11000113313
+301301301130
+1300113003133
+1333110001110031
+
+PAUL:
+10301103
+013110
+0111333
+30103
+103111
+111111
+111311
+111031
+13001301133131001110331030
+1301111333
+310100
