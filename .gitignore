@@ -1,3 +1,5 @@
 *.exe
 *.dsym
 main
+notes.txt
+prototype.txt
