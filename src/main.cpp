@@ -48,7 +48,6 @@ std::vector<Solid*> LoadFileToVec(const char*fileName) //should add it to "utils
                 tempRec = {tempStartX*(float)screenW/totalW, y*(float)screenH/totalH,
                                 (x-tempStartX)*(float)screenW/totalW, (float)screenH/totalH};
                 rec.emplace_back(new Trap(tempRec));
-                std::cout << "S-a  initializat TRIUNGHI\n";
                 x--;
             }
             if(temp[x] == SLIME)
@@ -58,7 +57,7 @@ std::vector<Solid*> LoadFileToVec(const char*fileName) //should add it to "utils
                 tempRec = {tempStartX*(float)screenW/totalW, y*(float)screenH/totalH,
                                 (x-tempStartX)*(float)screenW/totalW, (float)screenH/totalH};
                 rec.emplace_back(new Slime(tempRec));
-                x--; //because it's a second check, this is mandatory...??? I have to find out why it only works with this
+                x--;
             }
         }
         y++;
@@ -80,10 +79,22 @@ int main()
     {
         float dt = GetFrameTime();
 
+        if(IsKeyPressed(KEY_ENTER))
+        {
+            for(auto o: recVec)
+            {
+                if(typeid(*o) == typeid(Trap))
+                {
+                    o->SetBool(); //WORKS, I'll rewrite "objects.cpp", I'll make separate files for each class to make it clean
+                }
+            }
+        }
+
         BeginDrawing();
         ClearBackground(WHITE);
         for(auto r : recVec)
         {
+            r->Draw();
             r->Update();
         }
         player.Update(dt);
