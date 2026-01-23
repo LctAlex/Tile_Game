@@ -1,34 +1,32 @@
 #include "player.hpp"
 
-Player::Player(Vector2 pos = {100, 100}, float thickness = 50, Color color = PINK)
-:thickness(thickness), color(color)
+Player::Player(Vector2 pos, float thickness, Color color):hitbox({pos.x, pos.y, thickness, thickness}),color(color)
 {
     rotation = 0.0f;
-    rect = {pos.x, pos.y, thickness, thickness};
-}
-
-Rectangle Player::GetRect()
-{
-    return rect;
 }
 
 void Player::Draw()
 {
-    DrawRectangleRec(rect, color);
+    DrawRectangleRec(hitbox, color);
 }
 
-void Player::Move(float dt)
+bool Player::Update(float dt)
 {
-    if(IsKeyDown(KEY_RIGHT)) rect.x += 3.5 * dt * 50;
-    if(IsKeyDown(KEY_LEFT)) rect.x -= 3.5f * dt * 50;
-    if(IsKeyDown(KEY_DOWN)) rect.y += 3.5f * dt * 50;
-    if(IsKeyDown(KEY_UP)) rect.y -= 3.5f * dt * 50;
+    bool moving = true;
+    if(IsKeyDown(KEY_LEFT)) hitbox.x -= hitbox.width * 3 * dt;
+    else if(IsKeyDown(KEY_RIGHT)) hitbox.x += hitbox.width * 3 * dt;
+    else moving = false;
+    return moving;
 }
 
-void Player::Update(float dt) //check collisions
+Rectangle Player::GetHitbox() { return hitbox; }
+
+void Player::CheckWallColl()
 {
-    Draw();
-    Move(dt);
+    if(hitbox.x < 0) hitbox.x = 0;
+    else if(hitbox.x + hitbox.width > screenW) hitbox.x = screenW - hitbox.width;
+    else if((hitbox.y + hitbox.height/2) > screenH) std::cout << "DEAD\n";
+    std::cout << "Checking...\n";
 }
 
 Player::~Player(){}

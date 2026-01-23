@@ -1,2 +1,3 @@
 Regandeste TRAPS, mai bine folosesti DrawTriangleFan()/DrawTriangleStrips()
 LoadFileToVec ar trebui sa fie mai simplificat, e prea repetitiv (if if if if)
+In loc de string daca iau numere? Dar biti?

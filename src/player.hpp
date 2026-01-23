@@ -1,22 +1,24 @@
 #pragma once
+#include <iostream> //for debugging
+#include <vector>
 #include "raylib.h"
-#include <iostream>
+#include "objects.hpp"
+#include "data.hpp"
 
 class Player
 {
     private:
-    Rectangle rect;
-    float thickness;
+    Rectangle hitbox;
     float rotation;
     Color color;
     public:
     Player(Vector2 pos, float thickness, Color color);
-    Rectangle GetRect();
+
     void Draw();
-    void Move(float dt);
+    bool Update(float dt); //stuff will only happen when we update, should turn back to void, and implement bool moving inside Update, and check based on that inside Update()
+    Rectangle GetHitbox();
     void CheckWallColl();
-    void CheckObjColl();
-    void Update(float dt);
+    void CheckObjColl(std::vector<Solid*> &list);
 
     ~Player();
 };
