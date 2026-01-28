@@ -29,19 +29,16 @@ int main()
             }
         }
         
-        if(player.Update(dt))
-        {
-            player.CheckWallColl();
-        }
+        player.Update(recVec, dt);
 
         BeginDrawing();
         ClearBackground(WHITE);
         for(auto r : recVec)
         {
             r->Draw();
-            r->Update();
         }
         player.Draw();
+        DrawFPS(50, 50);
         EndDrawing();
     }
 

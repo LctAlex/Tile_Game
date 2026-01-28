@@ -11,14 +11,16 @@ class Player
     Rectangle hitbox;
     float rotation;
     Color color;
+    Vector2 momentum;
+    bool inAir;
     public:
     Player(Vector2 pos, float thickness, Color color);
 
     void Draw();
-    bool Update(float dt); //stuff will only happen when we update, should turn back to void, and implement bool moving inside Update, and check based on that inside Update()
+    void Update(std::vector<Solid*> &vec, float dt); //stuff will only happen when we update, should turn back to void, and implement bool moving inside Update, and check based on that inside Update()
+    void ResolveCollX(std::vector<Solid*> &vec, float velX);
+    void ResolveCollY(std::vector<Solid*> &vec, float velY);
     Rectangle GetHitbox();
-    void CheckWallColl();
-    void CheckObjColl(std::vector<Solid*> &list);
 
     ~Player();
 };
