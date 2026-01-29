@@ -27,16 +27,16 @@ void Player::Update(std::vector<Solid*> &vec, float dt)
         velocity.x += speed;
         momentum.x += 0.1f;
     }
-    if(IsKeyPressed(KEY_UP) && momentum.y == 0)
+    if(IsKeyPressed(KEY_UP) && momentum.y == 0.f)
     {
         inAir = true;
     }
 
-    if(momentum.x >= 0.1f || momentum.x <= -0.1f)
+    if(momentum.x >= 0.1f || momentum.x <= -0.1f) //momentum loss
     {
-        if((momentum.x < 0 && velocity.x > 0) || (momentum.x > 0 && velocity.x < 0))
+        if((momentum.x < 0.f && velocity.x > 0.f) || (momentum.x > 0.f && velocity.x < 0.f))
         {
-            momentum.x -= momentum.x*0.1f; //speed up momentum loss
+            momentum.x -= momentum.x*0.1f; //speed up momentum loss at turns
         }
         else momentum.x -= momentum.x*0.02f;
     }
@@ -52,6 +52,7 @@ void Player::Update(std::vector<Solid*> &vec, float dt)
         momentum.y += 0.5f;
     }
     
+    //momentum+ speed logic MUST be upated/optimized!!!
     ResolveCollX(vec, velocity.x*dt + momentum.x);
     ResolveCollY(vec, /*speed*dt +*/ momentum.y);
 
@@ -64,16 +65,31 @@ void Player::ResolveCollX(std::vector<Solid*> &vec, float velX)
     {
         if(CheckCollisionRecs(hitbox, e->GetRec()))
         {
-            if(velX > 0) //if goes right
+            if(typeid(*e) == typeid(Solid) || typeid(*e) == typeid(Trap))
             {
-                hitbox.x = e->GetRec().x - hitbox.width;
+                if(velX > 0.f) //if goes right
+                {
+                    hitbox.x = e->GetRec().x - hitbox.width;
+                }
+                else if (velX < 0.f)
+                {
+                    hitbox.x = e->GetRec().x + e->GetRec().width;
+                }
+                momentum.x = 0.f;
             }
-            else if (velX < 0)
+            else if(typeid(*e) == typeid(Slime))
             {
-                hitbox.x = e->GetRec().x + e->GetRec().width;
+                if(velX > 0.f) //if goes right
+                {
+                    hitbox.x = e->GetRec().x - hitbox.width;
+                }
+                else if (velX < 0.f)
+                {
+                    hitbox.x = e->GetRec().x + e->GetRec().width;
+                }
+                if(abs(momentum.x) < 75.f) momentum.x *= -1.5f;
             }
-            momentum.x = 0;
-            break; //leave if collided
+            break;
         }
     }
 }
@@ -85,15 +101,35 @@ void Player::ResolveCollY(std::vector<Solid*> &vec, float velY) //rethink
     {
         if(CheckCollisionRecs(hitbox, e->GetRec()))
         {
-            if(velY > 0) //if goes down
+            if(typeid(*e) == typeid(Solid) || typeid(*e) == typeid(Trap))
             {
-                hitbox.y = e->GetRec().y - hitbox.height;
+                if(velY > 0.f) //if goes down
+                {
+                    hitbox.y = e->GetRec().y - hitbox.height;
+                }
+                else if(velY < 0.f)
+                {
+                    hitbox.y = e->GetRec().y + e->GetRec().height;
+                }
+                if(typeid(*e) == typeid(Trap) && e->GetRec().y > hitbox.y)
+                {
+                    e->SetBool(true);
+                }
+                momentum.y = 0.f;
             }
-            else if(velY < 0)
+            else if(typeid(*e) == typeid(Slime))
             {
-                hitbox.y = e->GetRec().y + e->GetRec().height;
+                if(velY > 0.f)
+                {
+                    hitbox.y = e->GetRec().y - hitbox.height;
+                }
+                else if(velY < 0.f)
+                {
+                    hitbox.y = e->GetRec().y + e->GetRec().height;
+                }
+                if(abs(momentum.y) > 1.f) momentum.y *= -.75f; //must eliminate hardcodes
+                else momentum.y = 0.f;
             }
-            momentum.y = 0;
             break;
         }
     }

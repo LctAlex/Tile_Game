@@ -10,7 +10,7 @@ int main()
 {
     std::vector<Solid*> recVec = LoadFileToVec("levels/map1.txt");
 
-    Player player({screenW/2, screenH/2}, 50, PINK);
+    Player player({screenW-150, screenH-150}, 50, PINK);
 
     InitWindow(screenW, screenH, "Maps\nLoL");
     SetTargetFPS(60);
@@ -36,6 +36,7 @@ int main()
         for(auto r : recVec)
         {
             r->Draw();
+            r->Update();
         }
         player.Draw();
         DrawFPS(50, 50);

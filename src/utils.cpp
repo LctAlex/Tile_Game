@@ -12,6 +12,7 @@ std::fstream OpenFileI(const char* fileName)
     return file;
 }
 
+//make it so vertical rectangles unite as well (separately get the x and y axis recs)
 std::vector<Solid*> LoadFileToVec(const char*fileName)
 {
     std::fstream file = OpenFileI(fileName);
